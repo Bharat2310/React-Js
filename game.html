@@ -1,0 +1,119 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>High Graphics Pinball</title>
+<style>
+  body { margin: 0; background: #111; overflow: hidden; }
+  canvas { display: block; margin: auto; background: radial-gradient(#333, #111); }
+  #score {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: Arial, sans-serif;
+    color: #fff;
+    font-size: 24px;
+    background: rgba(0,0,0,0.5);
+    padding: 5px 15px;
+    border-radius: 8px;
+  }
+</style>
+</head>
+<body>
+<div id="score">Score: 0</div>
+<canvas id="game"></canvas>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
+<script>
+const { Engine, Render, Runner, World, Bodies, Body, Events } = Matter;
+const canvas = document.getElementById('game');
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+const engine = Engine.create();
+const world = engine.world;
+const render = Render.create({
+  canvas,
+  engine,
+  options: {
+    width: canvas.width,
+    height: canvas.height,
+    wireframes: false,
+    background: 'radial-gradient(#444, #000)'
+  }
+});
+Render.run(render);
+const runner = Runner.create();
+Runner.run(runner, engine);
+
+let score = 0;
+function updateScore(points) {
+  score += points;
+  document.getElementById('score').textContent = `Score: ${score}`;
+}
+
+// Table boundaries
+const wallOptions = { isStatic: true, render: { fillStyle: '#666' } };
+World.add(world, [
+  Bodies.rectangle(canvas.width/2, 0, canvas.width, 20, wallOptions),
+  Bodies.rectangle(canvas.width/2, canvas.height, canvas.width, 20, wallOptions),
+  Bodies.rectangle(0, canvas.height/2, 20, canvas.height, wallOptions),
+  Bodies.rectangle(canvas.width, canvas.height/2, 20, canvas.height, wallOptions)
+]);
+
+// Ball
+const ball = Bodies.circle(canvas.width/2, 200, 15, { restitution: 0.9, render: { fillStyle: '#ff0' } });
+World.add(world, ball);
+
+// Bumpers
+function createBumper(x, y) {
+  const bumper = Bodies.circle(x, y, 30, {
+    isStatic: true,
+    restitution: 1.5,
+    render: { fillStyle: '#0ff', strokeStyle: '#fff', lineWidth: 3 }
+  });
+  Events.on(engine, 'collisionStart', event => {
+    event.pairs.forEach(pair => {
+      if (pair.bodyA === bumper || pair.bodyB === bumper) {
+        updateScore(100);
+      }
+    });
+  });
+  return bumper;
+}
+World.add(world, [
+  createBumper(canvas.width/2 - 100, canvas.height/2),
+  createBumper(canvas.width/2 + 100, canvas.height/2)
+]);
+
+// Flippers (simplified)
+const flipperLength = 100;
+function createFlipper(x, y, isLeft) {
+  const flipper = Bodies.rectangle(x, y, flipperLength, 20, { render: { fillStyle: '#f00' } });
+  Body.setMass(flipper, Infinity);
+  const pivot = { x, y };
+  Events.on(engine, 'beforeUpdate', () => {
+    if (isLeft && leftPressed) Body.setAngle(flipper, -0.5);
+    else if (!isLeft && rightPressed) Body.setAngle(flipper, 0.5);
+    else Body.setAngle(flipper, 0);
+  });
+  return flipper;
+}
+const leftFlipper = createFlipper(canvas.width/2 - 50, canvas.height - 50, true);
+const rightFlipper = createFlipper(canvas.width/2 + 50, canvas.height - 50, false);
+World.add(world, [leftFlipper, rightFlipper]);
+
+// Controls
+let leftPressed = false, rightPressed = false;
+window.addEventListener('keydown', e => {
+  if (e.code === 'ArrowLeft') leftPressed = true;
+  if (e.code === 'ArrowRight') rightPressed = true;
+});
+window.addEventListener('keyup', e => {
+  if (e.code === 'ArrowLeft') leftPressed = false;
+  if (e.code === 'ArrowRight') rightPressed = false;
+});
+</script>
+</body>
+</html>

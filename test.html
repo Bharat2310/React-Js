@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UDYAMSETU</title>
+  <link href="https://fonts.googleapis.com/css2?family=Jaini+Purva&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(to bottom, #f4f6f9, #e8ecf1);
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 960px;
+      margin: auto;
+      padding: 40px 20px;
+      position: relative;
+    }
+    h1 {
+      font-family: 'Jaini Purva', cursive;
+      text-align: center;
+      margin-bottom: 40px;
+      color: #1f3a93;
+      font-size: 3.2rem;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+    }
+    .tabs {
+      display: flex;
+      justify-content: space-around;
+      margin-bottom: 30px;
+    }
+    .tab-button {
+      padding: 12px 24px;
+      font-weight: 600;
+      background-color: #dfe6f0;
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      transition: background-color 0.3s, color 0.3s;
+    }
+    .tab-button.active {
+      background-color: #1f3a93;
+      color: white;
+    }
+    .tab-content {
+      display: none;
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      animation: fadeIn 0.3s ease-in-out;
+    }
+    .tab-content.active {
+      display: block;
+    }
+    @keyframes fadeIn {
+      from {opacity: 0; transform: translateY(10px);}
+      to {opacity: 1; transform: translateY(0);}
+    }
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: 500;
+    }
+    input[type="text"], input[type="file"], input[type="number"] {
+      width: 100%;
+      padding: 10px;
+      margin-top: 8px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+    }
+    button {
+      margin-top: 25px;
+      padding: 12px 20px;
+      background-color: #1f3a93;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: background-color 0.3s;
+    }
+    button:hover {
+      background-color: #162b6d;
+    }
+    .gov-logo {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      width: 160px;
+      border-radius: 8px;
+    }
+    footer {
+      margin-top: 60px;
+      padding: 20px;
+      font-size: 0.9rem;
+      color: #555;
+      position: relative;
+      background: #eef2f7;
+      border-top: 1px solid #ccc;
+      border-radius: 12px 12px 0 0;
+    }
+    .copyright {
+      position: absolute;
+      
+      left: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <img src="logo.png" alt="Government Logo" class="gov-logo">
+
+    <h1>UDYAMSETU</h1>
+
+    <div class="tabs">
+      <button class="tab-button active" onclick="showTab('onboarding')">Onboarding</button>
+      <button class="tab-button" onclick="showTab('finance')">Finance</button>
+      <button class="tab-button" onclick="showTab('market')">Market</button>
+      <button class="tab-button" onclick="showTab('support')">Support</button>
+    </div>
+
+    <div id="onboarding" class="tab-content active">
+      <h2>Create Your MSME ID</h2>
+      <label>Name</label>
+      <input type="text" placeholder="Enter your full name">
+      <label>Business Name</label>
+      <input type="text" placeholder="Enter your business name">
+      <label>Phone Number</label>
+      <input type="text" placeholder="Enter phone number">
+      <label>Aadhar Number</label>
+      <input type="text" placeholder="Enter Aadhar number">
+      <button>Register & Get MSME ID</button>
+    </div>
+
+    <div id="finance" class="tab-content">
+      <h2>Apply for Loans</h2>
+      <label>Upload GST Bill / Invoice</label>
+      <input type="file">
+      <label>Enter Transaction Amount</label>
+      <input type="number" placeholder="₹">
+      <button>Check Loan Offers</button>
+    </div>
+
+    <div id="market" class="tab-content">
+      <h2>List Your Products</h2>
+      <label>Product Name</label>
+      <input type="text" placeholder="e.g., Handmade Jute Bag">
+      <label>Upload Product Image</label>
+      <input type="file">
+      <label>Price</label>
+      <input type="number" placeholder="₹">
+      <button>Publish Listing</button>
+    </div>
+
+    <div id="support" class="tab-content">
+      <h2>Digital Help & Training</h2>
+      <p>Free crash courses on UPI, WhatsApp marketing, exports, and more.</p>
+      <button>View Available Courses</button>
+    </div>
+
+    <footer>
+      <div class="copyright">© 2025 Government of NCT of Delhi</div>
+    </footer>
+  </div>
+
+  <script>
+    function showTab(tabId) {
+      const tabs = document.querySelectorAll('.tab-content');
+      const buttons = document.querySelectorAll('.tab-button');
+      tabs.forEach(tab => tab.classList.remove('active'));
+      buttons.forEach(btn => btn.classList.remove('active'));
+      document.getElementById(tabId).classList.add('active');
+      event.target.classList.add('active');
+    }
+  </script>
+</body>
+</html>
